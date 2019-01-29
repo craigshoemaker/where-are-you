@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Where you at?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+        .icons {
+            font-size:10em;
+        }
+
+        .fa-globe-americas {
+            background-color: #7eb046;
+            border-radius: 3em;
+        }
+
+        .fa-question {
+            margin-left: -55px;
+        }
+
+        .big-button {
+            padding: 1em;
+            max-width: 450px;
+            border: 2px solid #ddd;
+            border-radius: 3px;
+            background-color: #fafafa;
+            margin:2em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <section class="container">
+        <div class="big-button" onclick="showLocation();">
+
+            <div class="has-text-centered icons">
+                <i class="fas fa-globe-americas"></i>
+                <i class="fas fa-question"></i>
+            </div>
+            <div class="has-text-centered">
+                Show my location
+            </div>
+        </div>
+    </section>
+    <script>
+        const showLocation = () => {
+            let count = 0;
+
+            const watchID = navigator.geolocation.watchPosition(
+                position => {
+                    const lat = position.coords.latitude;
+                    const long = position.coords.longitude;
+
+                    const url = `http://maps.google.com/maps?q=${lat},${long}+(You+are+here!)&iwloc=A&hl=en`
+                    window.open(url);
+
+                    count++;
+                    if(count === 3) {
+                        navigator.geolocation.clearWatch(watchID);
+                    }
+                },
+                error => {
+                    alert('Error\n\nCheck console for details.');
+                    console.log(error);
+                });
+            
+        }
+    </script>
+</body>
+</html>

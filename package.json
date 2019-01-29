@@ -1,0 +1,11 @@
+{
+  "name": "where-are-you",
+  "version": "1.0.0",
+  "description": "Shows your location on a map using the Geolocation API",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server"
+  },
+  "author": "Craig Shoemaker <craig@craigshoemaker.net>",
+  "license": "MIT"
+}
