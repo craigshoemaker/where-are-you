@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Where you at?</title>
+    <title>Where are you?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -15,59 +15,135 @@
         .fa-globe-americas {
             background-color: #7eb046;
             border-radius: 3em;
+            color: #0653cc;
         }
 
         .fa-question {
-            margin-left: -55px;
+            margin-left: -115px;
+            display: inline-block;
+            position: absolute;
+            margin-top: 79px;
+            font-size: .6em;
+            color:#ccc;
+            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-color: #667;
         }
 
-        .big-button {
+        .content-container {
             padding: 1em;
-            max-width: 450px;
-            border: 2px solid #ddd;
-            border-radius: 3px;
-            background-color: #fafafa;
             margin:2em;
-            cursor: pointer;
+        }
+
+        .position {
+            margin-bottom: 50px;
+        }
+
+        .position div {
+            border-bottom: #eee 1px solid;
+            padding: 5px;
+        }
+
+        .lbl {
+            display: inline-block;
+            width: 140px;
+        }
+
+        .lbl::after {
+            content: ":";
+        }
+
+        .none {
+            display: none;
         }
     </style>
 </head>
 <body>
     <section class="container">
-        <div class="big-button" onclick="showLocation();">
-
-            <div class="has-text-centered icons">
+        <div class="content-container has-text-centered">
+            <div class="icons">
                 <i class="fas fa-globe-americas"></i>
                 <i class="fas fa-question"></i>
             </div>
             <div class="has-text-centered">
-                Show my location
+                <button class="button" onclick="demo.watchPosition();">Watch Position</button>
+                <button class="button" onclick="demo.stop();">Stop</button>
+                <button class="button" onclick="demo.showMap();">Show Map</button>
+            </div>
+        </div>
+        <div id="positions">
+            <div class="position-template none">
+                <h2 class="is-size-4">Position (<span class="timestamp"></span>)</h2>
+                <div><span class="lbl">Accuracy</span><span class="accuracy"></span></div>
+                <div><span class="lbl">Altitude</span><span class="altitude"></span></div>
+                <div><span class="lbl">Altitude Accuracy</span><span class="altitudeAccuracy"></span></div>
+                <div><span class="lbl">Heading</span><span class="heading"></span></div>
+                <div><span class="lbl">Latitude</span><span class="latitude"></span></div>
+                <div><span class="lbl">Longitude</span><span class="longitude"></span></div>
+                <div><span class="lbl">Speed</span><span class="speed"></span></div>
             </div>
         </div>
     </section>
     <script>
-        const showLocation = () => {
-            let count = 0;
 
-            const watchID = navigator.geolocation.watchPosition(
-                position => {
-                    const lat = position.coords.latitude;
-                    const long = position.coords.longitude;
+        const demo = {
+            watchID: null,
+            counter: 0,
 
-                    const url = `http://maps.google.com/maps?q=${lat},${long}+(You+are+here!)&iwloc=A&hl=en`
-                    window.open(url);
+            $positions: null,
+            $template: null,
 
-                    count++;
-                    if(count === 3) {
-                        navigator.geolocation.clearWatch(watchID);
-                    }
-                },
-                error => {
-                    alert('Error\n\nCheck console for details.');
-                    console.log(error);
-                });
-            
-        }
+            getCounter: () => demo.counter++,
+
+            watchPosition: () => {
+                demo.$positions.innerHTML += '<div class="has-text-right"><span class="tag">Starting position watch...</span></div>';
+                demo.watchID = navigator.geolocation.watchPosition(
+                    position => {
+                        const el = demo.$template.cloneNode(true);
+                        el.id = `position-${demo.getCounter()}`;
+                        el.querySelector('.accuracy').innerText = position.coords.accuracy;
+                        el.querySelector('.altitude').innerText = position.coords.altitude;
+                        el.querySelector('.altitudeAccuracy').innerText = position.coords.altitudeAccuracy;
+                        el.querySelector('.heading').innerText = position.coords.heading;
+                        el.querySelector('.latitude').innerText = position.coords.latitude;
+                        el.querySelector('.longitude').innerText = position.coords.longitude;
+                        el.querySelector('.speed').innerText = position.coords.speed;
+                        el.querySelector('.timestamp').innerText = position.timestamp;
+                        el.classList.remove('none');
+                        el.classList.add('position');
+                        demo.$positions.appendChild(el);
+                    },
+                    error => {
+                        alert('Error\n\nCheck console for details.');
+                        console.log(error);
+                    });
+            },
+
+            stop: () => {
+                navigator.geolocation.clearWatch(demo.watchID);
+                demo.$positions.innerHTML += '<div class="has-text-right"><span class="tag">End position watch</span></div>';
+            },
+
+            showMap: () => {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const long = position.coords.longitude;
+                        const url = `http://maps.google.com/maps?q=${lat},${long}`;
+                        window.open(url);
+                    },
+                    error => {
+                        alert('Error\n\nCheck console for details.');
+                        console.log(error);
+                    });
+            },
+
+            load: () => {
+                demo.$template = document.querySelector('.position-template');
+                demo.$positions = document.querySelector('#positions');
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', demo.load);
     </script>
 </body>
 </html>
