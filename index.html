@@ -44,13 +44,12 @@
         }
 
         .position div {
-            border-bottom: #eee 1px solid;
             padding: 5px;
         }
 
         .lbl {
-            display: inline-block;
-            width: 140px;
+            display: block;
+            border-bottom: #eee 1px solid;
         }
 
         .lbl::after {
@@ -97,20 +96,22 @@
 
             getCounter: () => demo.counter++,
 
+            getValue: (value) => value ? value : '&nbsp;',
+
             watchPosition: () => {
                 demo.$positions.innerHTML += '<div class="has-text-right"><span class="tag">Starting position watch...</span></div>';
                 demo.watchID = navigator.geolocation.watchPosition(
                     position => {
                         const el = demo.$template.cloneNode(true);
                         el.id = `position-${demo.getCounter()}`;
-                        el.querySelector('.accuracy').innerText = position.coords.accuracy;
-                        el.querySelector('.altitude').innerText = position.coords.altitude;
-                        el.querySelector('.altitudeAccuracy').innerText = position.coords.altitudeAccuracy;
-                        el.querySelector('.heading').innerText = position.coords.heading;
-                        el.querySelector('.latitude').innerText = position.coords.latitude;
-                        el.querySelector('.longitude').innerText = position.coords.longitude;
-                        el.querySelector('.speed').innerText = position.coords.speed;
-                        el.querySelector('.timestamp').innerText = position.timestamp;
+                        el.querySelector('.accuracy').innerHTML = demo.getValue(position.coords.accuracy);
+                        el.querySelector('.altitude').innerHTML = demo.getValue(position.coords.altitude);
+                        el.querySelector('.altitudeAccuracy').innerHTML = demo.getValue(position.coords.altitudeAccuracy);
+                        el.querySelector('.heading').innerHTML = demo.getValue(position.coords.heading);
+                        el.querySelector('.latitude').innerHTML = demo.getValue(position.coords.latitude);
+                        el.querySelector('.longitude').innerHTML = demo.getValue(position.coords.longitude);
+                        el.querySelector('.speed').innerHTML = demo.getValue(position.coords.speed);
+                        el.querySelector('.timestamp').innerHTML = demo.getValue(position.timestamp);
                         el.classList.remove('none');
                         el.classList.add('position');
                         demo.$positions.appendChild(el);
