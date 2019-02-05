@@ -4,4 +4,4 @@
 
 Get location information about your device by pressing the **Watch Location** button. 
 
-> **Note:** If you are on a mobile device, you may need to enable location services for your browser before you can get location information and pop up windows to see the map.
+> **Note:** If you are on a mobile device, you may need to enable location services for your browser before you can get location information. You also may need to allow browser pop up windows to see the map.
