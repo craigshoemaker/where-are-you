@@ -30,11 +30,6 @@
             -webkit-text-stroke-color: #667;
         }
 
-        .content-container {
-            padding: 1em;
-            margin:2em;
-        }
-
         #positions {
             padding: 10%;
         }
@@ -69,8 +64,8 @@
                 <i class="fas fa-globe-americas"></i>
                 <i class="fas fa-question"></i>
             </div>
-            <button class="button input" onclick="demo.watchPosition();">Watch Position</button>
-            <button class="button input" onclick="demo.stop();">Stop</button>
+            <button class="button input watch-button" onclick="demo.watchPosition();">Watch Position</button>
+            <button class="button input none stop-button" onclick="demo.stop();">Stop</button>
             <button class="button input" onclick="demo.showMap();">Show Map</button>
         </div>
         <div id="positions">
@@ -92,14 +87,14 @@
             watchID: null,
             counter: 0,
 
-            $positions: null,
-            $template: null,
-
             getCounter: () => demo.counter++,
 
             getValue: (value) => value ? value : '&nbsp;',
 
             watchPosition: () => {
+                demo.$watchButton.classList.toggle('none');
+                demo.$stopButton.classList.toggle('none');
+
                 demo.$positions.innerHTML += '<div class="has-text-right"><span class="tag">Starting position watch...</span></div>';
                 demo.watchID = navigator.geolocation.watchPosition(
                     position => {
@@ -124,6 +119,9 @@
             },
 
             stop: () => {
+                demo.$watchButton.classList.toggle('none');
+                demo.$stopButton.classList.toggle('none');
+
                 navigator.geolocation.clearWatch(demo.watchID);
                 demo.$positions.innerHTML += '<div class="has-text-right"><span class="tag">End position watch</span></div>';
             },
@@ -145,6 +143,8 @@
             load: () => {
                 demo.$template = document.querySelector('.position-template');
                 demo.$positions = document.querySelector('#positions');
+                demo.$watchButton = document.querySelector('.watch-button');
+                demo.$stopButton = document.querySelector('.stop-button');
             }
         };
 
