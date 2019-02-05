@@ -55,6 +55,10 @@
         .none {
             display: none;
         }
+
+        .notification {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -67,6 +71,14 @@
             <button class="button input watch-button" onclick="demo.watchPosition();">Watch Position</button>
             <button class="button input none stop-button" onclick="demo.stop();">Stop</button>
             <button class="button input" onclick="demo.showMap();">Show Map</button>
+
+            <div class="notification location-services none">
+                If you are on a mobile device, you may need to enable location services for your browser before you can get location information.
+            </div>
+
+            <div class="notification pop-window none">
+                You may need to allow browser pop up windows to see the map.
+            </div>
         </div>
         <div id="positions">
             <div class="position-template none">

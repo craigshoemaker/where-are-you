@@ -29,8 +29,7 @@ const demo = {
                 demo.$positions.appendChild(el);
             },
             error => {
-                alert('Error\n\nCheck console for details.');
-                console.log(error);
+                document.querySelector('.location-services').toggle('none');
             });
     },
 
@@ -48,7 +47,12 @@ const demo = {
                 const lat = position.coords.latitude;
                 const long = position.coords.longitude;
                 const url = `http://maps.google.com/maps?q=${lat},${long}`;
-                window.open(url);
+
+                var map = window.open(url);
+
+                if (map == null || typeof(map)=='undefined') { 	
+                    document.querySelector('.pop-window').toggle('none');
+                } 
             },
             error => {
                 alert('Error\n\nCheck console for details.');
